@@ -1,0 +1,7 @@
+node_modules
+.wrangler
+.github
+.vscode
+dist
+.env
+package-lock.json
