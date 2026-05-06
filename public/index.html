@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<!-- v1.1.2 - Forced Refresh -->
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendário de Inventário — Azul Atacarejo</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style id="dynamic-sector-styles"></style>
+</head>
+<body>
+
+<!-- ====== HEADER ====== -->
+<header>
+  <div class="logo">
+    <div class="logo-text">
+      LOGÍSTICA
+      <span>CRONOGRAMA DE INVENTÁRIO</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <button id="viewLogsBtn" class="btn-secondary" style="padding: 7px 13px; font-size: 13px; margin-right: 8px;">
+      Logs
+    </button>
+    <div class="admin-container">
+      <button id="adminBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Login
+        <span class="admin-badge">ativo</span>
+      </button>
+      <div id="adminDropdown" class="dropdown-menu">
+        <button id="openSettings"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Configurações</button>
+        <button id="doLogout" class="btn-logout"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Sair</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ====== CALENDAR NAVIGATION ====== -->
+<nav class="calendar-nav">
+  <div class="year-nav" id="yearNav">
+    <!-- Years will be injected here -->
+  </div>
+  <div class="month-nav" id="monthNav">
+    <!-- Months will be injected here -->
+  </div>
+</nav>
+
+<!-- ====== MAIN ====== -->
+<main>
+  <div class="month-header">
+    <div>
+      <div class="month-title" id="monthTitle">—</div>
+    </div>
+  </div>
+
+  <div class="weekday-row">
+    <div class="wd-label weekend">Dom</div>
+    <div class="wd-label">Seg</div>
+    <div class="wd-label">Ter</div>
+    <div class="wd-label">Qua</div>
+    <div class="wd-label">Qui</div>
+    <div class="wd-label">Sex</div>
+    <div class="wd-label weekend">Sáb</div>
+  </div>
+
+  <div class="cal-grid" id="calGrid"></div>
+
+  <div class="legend-container">
+    <button id="toggleLegend" class="btn-secondary legend-toggle">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+      Ver Legendas
+    </button>
+    <div class="legend-content" id="legendContent">
+      <div class="legend" id="legend"></div>
+    </div>
+  </div>
+</main>
+
+<!-- ====== MODAL: Login Admin ====== -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <button class="modal-close-btn" id="closeLoginBtn">&times;</button>
+    <h2>🔐 Acesso Administrativo</h2>
+    <input type="text" id="userInput" placeholder="Usuário" style="margin-bottom: 10px;">
+    <input type="password" id="pwInput" placeholder="Senha">
+    <div class="err" id="loginErr"></div>
+    <div class="modal-actions">
+      <button class="btn-primary" id="doLogin" style="width: 100%;">Entrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== MODAL: Day Details ====== -->
+<div class="modal-overlay" id="dayModal">
+  <div class="modal" style="max-width: 550px;">
+    <h2 id="dayModalTitle">📅 Detalhes do Dia</h2>
+    
+    <div class="modal-body">
+      <div class="edit-date-label" id="editDateLabel">—</div>
+      
+      <!-- Sector Selection (Admin Only) -->
+      <div id="adminSectorSection" class="settings-section" style="margin-bottom: 24px;">
+        <div class="edit-current-sector" id="editCurrentSector">Setor atual: <span>—</span></div>
+        <p style="margin-bottom:12px;font-size:13px;color:var(--muted)">Selecione o setor para este dia:</p>
+        <div class="select-wrap">
+          <select id="sectorSelect">
+            <option value="">— Nenhum (dia livre) —</option>
+            <option value="Loja">Loja Início</option>
+            <option value="Hortifruti">Hortifruti</option>
+            <option value="Açougue">Açougue</option>
+            <option value="Peixaria e F. Favorito">Peixaria e F. Favorito</option>
+            <option value="Frios">Frios</option>
+            <option value="Terrazzo">Terrazzo</option>
+            <option value="Especiarias Agranel">Especiarias Agranel</option>
+            <option value="Casa de Festa">Casa de Festa</option>
+            <option value="Feriado">Feriado</option>
+          </select>
+        </div>
+        <button class="btn-primary" id="saveEdit" style="width: 100%;">Salvar Setor</button>
+      </div>
+
+      <!-- Observations / Chat Section -->
+      <div class="chat-section">
+        <h3>📝 Observações</h3>
+        <div id="commentsList" class="comments-list">
+          <!-- Comments will be loaded here -->
+        </div>
+        <div class="chat-input-wrap">
+          <textarea id="commentInput" placeholder="Escreva uma observação..." rows="1"></textarea>
+          <button id="sendComment" class="btn-icon active" style="padding: 10px; border-radius: 10px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-secondary" style="flex: 1" id="closeDayModal">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== MODAL: Logs ====== -->
+<div class="modal-overlay" id="logsModal">
+  <div class="modal">
+    <h2>📜 Histórico de Alterações</h2>
+    <div class="modal-body">
+      <div id="logsList">
+        <!-- Logs will be loaded here -->
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" style="flex: 1" id="closeLogs">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== MODAL: Settings ====== -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal" style="max-width: 500px;">
+    <h2>⚙️ Configurações</h2>
+    
+    <div class="modal-body">
+      <div class="settings-section">
+        <h3>Meu Login de Acesso</h3>
+        <div style="display: flex; gap: 8px;">
+          <input type="text" id="myNewLogin" placeholder="Novo Login" style="margin-bottom: 0 !important; flex: 1;">
+          <button class="btn-primary" id="saveNewLogin" style="width: auto; padding: 8px 16px;">Alterar Login</button>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3>Meu Perfil</h3>
+        <input type="text" id="profileName" placeholder="Seu Nome Completo" style="margin-bottom: 10px;">
+        <input type="text" id="profileDept" placeholder="Seu Setor / Cargo" style="margin-bottom: 10px;">
+        <button class="btn-primary" id="saveProfile" style="width: auto; padding: 8px 16px;">Salvar Perfil</button>
+      </div>
+
+      <div class="settings-section">
+        <h3>Minha Senha</h3>
+        <input type="password" id="newPassword" placeholder="Nova Senha">
+        <button class="btn-primary" id="saveNewPassword" style="width: auto; padding: 8px 16px;">Alterar Senha</button>
+      </div>
+
+      <div class="settings-section" id="adminOnlySettings">
+        <h3>Gerenciar Equipe</h3>
+        <div id="usersList" class="users-list">
+          <!-- Users will be loaded here -->
+        </div>
+        <hr style="margin: 16px 0; opacity: 0.1;">
+        <h4>Novo Usuário</h4>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <input type="text" id="newUserName" placeholder="Login (ex: joao)" style="margin-bottom: 0 !important;">
+          <input type="text" id="newRealName" placeholder="Nome Completo" style="margin-bottom: 0 !important;">
+          <input type="text" id="newDept" placeholder="Setor" style="margin-bottom: 0 !important;">
+          <button class="btn-primary" id="createUserBtn" style="width: 100%; padding: 12px;">Criar Novo Usuário</button>
+        </div>
+
+        <hr style="margin: 24px 0; opacity: 0.1;">
+        
+        <h3>Gerenciar Setores</h3>
+        <div id="sectorsManagementList" class="users-list" style="max-height: 450px; margin-bottom: 16px;">
+          <!-- Sectors will be loaded here -->
+        </div>
+        <h4>Novo Setor</h4>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <input type="text" id="newSectorName" placeholder="Nome do Setor" style="margin-bottom: 0 !important;">
+          <div style="display: flex; align-items: center; gap: 10px; background: var(--navy); padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border);">
+            <span style="font-size: 13px; color: var(--muted);">Cor do Setor:</span>
+            <input type="color" id="newSectorColor" value="#2979ff" style="width: 40px; height: 30px; padding: 0; border: none; background: none; cursor: pointer; margin-bottom: 0 !important;">
+          </div>
+          <button class="btn-primary" id="addSectorBtn" style="width: 100%; padding: 12px;">Adicionar Setor</button>
+          </div>
+
+          <div class="settings-section" id="robsonOnlySettings" style="display: none; border-color: rgba(229, 57, 53, 0.3); background: rgba(229, 57, 53, 0.05); margin-top: 24px;">
+            <h3 style="color: #ff8a80;">⚠️ Zona de Perigo</h3>
+
+          <p style="font-size: 12px; margin-bottom: 12px;">Apaga permanentemente todos os registros de inventário, logs e observações.</p>
+          <button class="btn-danger" id="clearAllDataBtn" style="width: 100%; padding: 12px;">Limpar Todos os Registros</button>
+          </div>
+          </div>
+
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-secondary" style="flex: 1" id="closeSettings">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== MODAL: Reset Password ====== -->
+<div class="modal-overlay" id="resetModal">
+  <div class="modal">
+    <h2>🔒 Redefinir Senha</h2>
+    <p>Este é seu primeiro acesso ou sua senha é temporária. Por favor, escolha uma nova senha para continuar.</p>
+    <input type="password" id="resetPwInput" placeholder="Nova Senha">
+    <div class="err" id="resetErr"></div>
+    <div class="modal-actions">
+      <button class="btn-primary" id="doResetPw">Salvar e Entrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== TOAST ====== -->
+<div id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
