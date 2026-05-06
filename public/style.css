@@ -246,6 +246,25 @@ body.admin-mode .day-cell:not(.other-month):hover {
 .legend-item[data-sector="Empty"]         { background: var(--navy-card); color: var(--muted); text-shadow: none; text-transform: none; }
 .legend-dot { width: 12px; height: 12px; border-radius: 4px; flex-shrink: 0; background: #fff; }
 
+/* ====== FILTERING STYLES ====== */
+.day-cell.filtered-out {
+  opacity: 0.1 !important;
+  filter: grayscale(0.8) blur(1px);
+  pointer-events: none;
+  transform: scale(0.95);
+}
+
+.legend-item { cursor: pointer; }
+.legend-item.filter-active {
+  box-shadow: 0 0 0 2px var(--text), 0 8px 20px rgba(0,0,0,0.4);
+  transform: translateY(-4px);
+  z-index: 10;
+}
+.legend-item.filter-active .legend-dot {
+  background: var(--navy);
+  box-shadow: inset 0 0 0 2px #fff;
+}
+
 /* Modal Select and Inputs Uppercase */
 #sectorSelect, #newSectorName, #sectorsManagementList input[type="text"] {
   text-transform: uppercase;

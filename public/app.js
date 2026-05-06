@@ -19,6 +19,7 @@ let currentYear = now.getFullYear();
 if (!YEARS.includes(currentYear)) { currentYear = 2026; }
 let currentMonth = now.getMonth() + 1;
 let editingDate = null;
+let activeFilters = []; // Array to store multiple active sector key filters
 
 const todayStr = new Date().toISOString().split('T')[0];
 
@@ -189,8 +190,31 @@ function renderCalendar() {
     const sInfo = SECTORS.find(s => s.key === sector);
     const tagLabel = sInfo ? sInfo.label : (sector === 'Feriado' ? 'Feriado' : '');
     const isFeriado = sector === 'Feriado';
+
+    // Advanced Multi-Filter Logic
+    let isFilteredOut = false;
+    if (activeFilters.length > 0) {
+      const match = activeFilters.some(f => {
+        if (f === "Empty") return sector === "";
+        return sector === f;
+      });
+      isFilteredOut = !match;
+    }
+
     const cell = document.createElement('div');
-    cell.className = ['day-cell', isToday ? 'today' : '', isWeekend ? 'weekend-cell' : '', isFeriado ? 'feriado-cell' : ''].filter(Boolean).join(' ');
+    cell.className = [
+      'day-cell', 
+      isToday ? 'today' : '', 
+      isWeekend ? 'weekend-cell' : '', 
+      isFeriado ? 'feriado-cell' : '',
+      isFilteredOut ? 'filtered-out' : ''
+    ].filter(Boolean).join(' ');
+    
+    // On mobile, completely hide if filtered out
+    if (isFilteredOut && window.innerWidth <= 768) {
+      cell.style.display = 'none';
+    }
+
     cell.dataset.date = dateStr;
     cell.dataset.sector = sector;
     const weekdaysMin = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
@@ -203,9 +227,27 @@ function renderCalendar() {
 
 function renderLegend() {
   const leg = document.getElementById('legend');
-  leg.innerHTML = SECTORS.map(s =>
-    `<div class="legend-item" data-sector="${s.key}"><div class="legend-dot"></div>${s.label}</div>`
-  ).join('') + `<div class="legend-item" data-sector="Empty"><div class="legend-dot"></div>Sem Inventário</div>`;
+  const allSectors = [...SECTORS, { key: "Empty", label: "Sem Inventário" }];
+  
+  leg.innerHTML = allSectors.map(s => {
+    const isActive = activeFilters.includes(s.key);
+    return `<div class="legend-item ${isActive ? 'filter-active' : ''}" 
+                 data-sector="${s.key}" 
+                 onclick="toggleFilter('${s.key}')">
+      <div class="legend-dot"></div>
+      ${s.label}
+    </div>`;
+  }).join('');
+}
+
+function toggleFilter(sectorKey) {
+  const index = activeFilters.indexOf(sectorKey);
+  if (index > -1) {
+    activeFilters.splice(index, 1); // Remove if already filtered
+  } else {
+    activeFilters.push(sectorKey); // Add new filter
+  }
+  renderCalendar();
 }
 
 function switchYear(year) { currentYear = year; renderNav(); renderCalendar(); }
