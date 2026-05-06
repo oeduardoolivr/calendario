@@ -1,6 +1,0 @@
-name = "calendario-azul-atacarejo"
-pages_build_output_dir = "public"
-
-[[kv_namespaces]]
-binding = "CALENDAR_DATA"
-id = "YOUR_KV_NAMESPACE_ID" # To be replaced after creation
